@@ -15,7 +15,9 @@ COPY init_repo.sh /init_repo.sh
 RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     useradd --uid 1000 --shell /bin/bash --groups wheel --create-home aurutils && \
     install -d /repo -o aurutils && \
-    chmod +x /entrypoint.sh
+    chmod +x /cmd.sh && \
+    chmod +x /init_repo.sh && \
+    chmod +x /start_nginx.sh
 
 VOLUME ["/repo"]
 
