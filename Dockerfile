@@ -5,7 +5,7 @@ LABEL ver="15.5"
 EXPOSE 80
 
 RUN pacman --noconfirm -Syu && \
-    pacman --noconfirm -S git jq pacutils expect vim vifm nginx && \
+    pacman --noconfirm -S git jq pacutils expect vim vifm shellcheck bash-completion man-db man-pages ninja perl-json-xs nginx && \
     pacman --noconfirm -Scc
 
 COPY cmd.sh /cmd.sh
