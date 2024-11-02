@@ -7,4 +7,3 @@ fi
 
 sudo pacman --noconfirm -Syu
 repoctl conf new "$(readlink -f /repo/custom.db)"
-exec "$@"

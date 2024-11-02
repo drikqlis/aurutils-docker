@@ -2,17 +2,24 @@ FROM docker.io/library/archlinux:base-devel
 
 LABEL ver="15.5"
 
+EXPOSE 80
+
 RUN pacman --noconfirm -Syu && \
-    pacman --noconfirm -S git jq pacutils expect vim vifm && \
+    pacman --noconfirm -S git jq pacutils expect vim vifm nginx && \
     pacman --noconfirm -Scc
 
-COPY entrypoint.sh /entrypoint.sh
+COPY cmd.sh /cmd.sh
+COPY start_nginx.sh /start_nginx.sh
+COPY init_repo.sh /init_repo.sh
+
 RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     useradd --uid 1000 --shell /bin/bash --groups wheel --create-home aurutils && \
     install -d /repo -o aurutils && \
     chmod +x /entrypoint.sh
 
 VOLUME ["/repo"]
+
+COPY nginx.conf /etc/nginx/nginx.conf
 
 USER aurutils
 WORKDIR /home/aurutils
@@ -35,4 +42,4 @@ RUN git clone https://aur.archlinux.org/repoctl.git && \
 
 COPY pacman.conf /etc/pacman.conf
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/cmd.sh"]
