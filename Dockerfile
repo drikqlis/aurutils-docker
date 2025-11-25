@@ -11,13 +11,15 @@ RUN pacman --noconfirm -Syu && \
 COPY cmd.sh /cmd.sh
 COPY start_nginx.sh /start_nginx.sh
 COPY init_repo.sh /init_repo.sh
+COPY auto_sync.sh /auto_sync.sh
 
 RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     useradd --uid 1000 --shell /bin/bash --groups wheel --create-home aurutils && \
     install -d /repo -o aurutils && \
     chmod +x /cmd.sh && \
     chmod +x /init_repo.sh && \
-    chmod +x /start_nginx.sh
+    chmod +x /start_nginx.sh && \
+    chmod +x /auto_sync.sh
 
 VOLUME ["/repo"]
 
