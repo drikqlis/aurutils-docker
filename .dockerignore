@@ -3,5 +3,6 @@
 !cmd.sh
 !init_repo.sh
 !start_nginx.sh
+!auto_sync.sh
 !pacman.conf
 !nginx.conf
