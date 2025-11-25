@@ -1,7 +1,5 @@
 FROM docker.io/library/archlinux:base-devel
 
-LABEL ver="15.5"
-
 EXPOSE 80
 
 RUN pacman --noconfirm -Syu && \
