@@ -10,13 +10,12 @@ sync_with_retry() {
     local name="$1"
     local logfile="$2"
     shift 2
-    local cmd=("$@")
 
     local attempt=1
     while [ $attempt -le $MAX_ATTEMPTS ]; do
         echo "$name attempt $attempt/$MAX_ATTEMPTS"
         set +e
-        "${cmd[@]}" 2>&1 | tee "$logfile"
+        "$@" 2>&1 | tee "$logfile"
         local exit_code=$?
         set -e
 
@@ -38,9 +37,9 @@ sync_with_retry() {
 }
 
 echo "Updating VCS packages..."
-vcs_pkgs=$(pacman -Sl aur 2>/dev/null | awk '{print $2}' | grep -E '-(git|svn|hg|bzr)$' || true)
+vcs_pkgs=$(pacman -Sl aur 2>/dev/null | awk '{print $2}' | grep -E -- '-(git|svn|hg|bzr)$' || true)
 if [ -n "$vcs_pkgs" ]; then
-    sync_with_retry "VCS sync" /tmp/aur-sync-vcs.log bash -c "echo '$vcs_pkgs' | xargs -r aur sync --no-view --no-confirm --database=aur --force"
+    sync_with_retry "VCS sync" /tmp/aur-sync-vcs.log sh -c "echo '$vcs_pkgs' | xargs -r aur sync --no-view --no-confirm --database=aur --force"
 fi
 
 echo "Updating all packages in repository..."
