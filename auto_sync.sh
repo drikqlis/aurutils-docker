@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export AURDEST=/repo/build
+mkdir -p "$AURDEST"
+
 echo "Starting AUR sync at $(date)"
 
 sudo pacman --noconfirm -Sy
@@ -16,7 +19,7 @@ sync_with_retry() {
         echo "$name attempt $attempt/$MAX_ATTEMPTS"
         set +e
         "$@" 2>&1 | tee "$logfile"
-        local exit_code=$?
+        local exit_code=${PIPESTATUS[0]}
         set -e
 
         if grep -q "unknown public key" "$logfile"; then
@@ -41,7 +44,7 @@ vcs_pkgs=$(pacman -Sl aur 2>/dev/null | awk '{print $2}' | grep -E -- '-(git|svn
 if [ -n "$vcs_pkgs" ]; then
     for pkg in $vcs_pkgs; do
         echo "Processing VCS package: $pkg"
-        sync_with_retry "VCS sync $pkg" /tmp/aur-sync-vcs.log sh -c "aur fetch '$pkg' && aur build --no-view --no-confirm --database=aur --force '$pkg'"
+        sync_with_retry "VCS sync $pkg" /tmp/aur-sync-vcs.log sh -c "cd '$AURDEST' && aur fetch '$pkg' && cd '$pkg' && aur build --no-confirm --database=aur --syncdeps --force --margs --noconfirm"
     done
 else
     echo "No VCS packages found"
