@@ -2,6 +2,7 @@
 
 export AURDEST=/repo/build
 mkdir -p "$AURDEST"
+git config --global --add safe.directory /repo/build
 
 echo "Starting AUR sync at $(date)"
 
