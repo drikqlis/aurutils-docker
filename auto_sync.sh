@@ -37,11 +37,11 @@ sync_with_retry() {
 }
 
 echo "Updating VCS packages..."
-vcs_updates=$(aur vercmp --all 2>/dev/null | grep -E -- '-(git|svn|hg|bzr)\s' | cut -f1 || true)
-if [ -n "$vcs_updates" ]; then
-    sync_with_retry "VCS sync" /tmp/aur-sync-vcs.log sh -c "echo '$vcs_updates' | aur sync --no-view --no-confirm --database=aur --no-ver-shallow"
+vcs_pkgs=$(pacman -Sl aur 2>/dev/null | awk '{print $2}' | grep -E -- '-(git|svn|hg|bzr)$' || true)
+if [ -n "$vcs_pkgs" ]; then
+    sync_with_retry "VCS sync" /tmp/aur-sync-vcs.log sh -c "echo '$vcs_pkgs' | aur sync --no-view --no-confirm --database=aur --no-ver-shallow"
 else
-    echo "No VCS package updates found"
+    echo "No VCS packages found"
 fi
 
 echo "Updating all packages in repository..."
