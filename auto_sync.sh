@@ -1,9 +1,5 @@
 #!/bin/bash
 
-export AURDEST=/repo/build
-mkdir -p "$AURDEST"
-git config --global --add safe.directory '/repo/build/*'
-
 echo "Starting AUR sync at $(date)"
 
 sudo pacman --noconfirm -Sy
@@ -45,7 +41,7 @@ vcs_pkgs=$(pacman -Sl aur 2>/dev/null | awk '{print $2}' | grep -E -- '-(git|svn
 if [ -n "$vcs_pkgs" ]; then
     for pkg in $vcs_pkgs; do
         echo "Processing VCS package: $pkg"
-        sync_with_retry "VCS sync $pkg" /tmp/aur-sync-vcs.log sh -c "cd '$AURDEST' && aur fetch '$pkg' && cd '$pkg' && aur build --no-confirm --database=aur --syncdeps --force --margs --noconfirm"
+        sync_with_retry "VCS sync $pkg" /tmp/aur-sync-vcs.log sh -c "cd /tmp && aur fetch '$pkg' && cd '$pkg' && aur build --no-confirm --database=aur --syncdeps --force --margs --noconfirm"
     done
 else
     echo "No VCS packages found"
