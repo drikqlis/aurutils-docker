@@ -26,7 +26,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 USER aurutils
 WORKDIR /home/aurutils
 
-RUN git clone https://aur.archlinux.org/aurutils.git && \
+RUN for i in 1 2 3 4 5; do git clone https://aur.archlinux.org/aurutils.git && break || sleep 5; done && \
     cd aurutils && \
     sudo pacman --noconfirm -Syu && \
     makepkg --noconfirm --syncdeps --rmdeps -si && \
@@ -34,7 +34,7 @@ RUN git clone https://aur.archlinux.org/aurutils.git && \
     rm -rf aurutils && \
     sudo pacman --noconfirm -Scc
 
-RUN git clone https://aur.archlinux.org/repoctl.git && \
+RUN for i in 1 2 3 4 5; do git clone https://aur.archlinux.org/repoctl.git && break || sleep 5; done && \
     cd repoctl && \
     sudo pacman --noconfirm -Syu && \
     makepkg --noconfirm --syncdeps --rmdeps -si && \
