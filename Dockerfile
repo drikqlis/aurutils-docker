@@ -3,7 +3,7 @@ FROM docker.io/library/archlinux:base-devel
 EXPOSE 80
 
 RUN pacman --noconfirm -Syu && \
-    pacman --noconfirm -S git jq pacutils expect vim vifm shellcheck bash-completion man-db man-pages ninja perl-json-xs nginx && \
+    pacman --noconfirm -S git jq pacutils expect vim vifm shellcheck bash-completion man-db man-pages ninja perl-json-xs nginx multilib-devel && \
     pacman --noconfirm -Scc
 
 COPY cmd.sh /cmd.sh
