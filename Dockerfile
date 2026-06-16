@@ -2,7 +2,8 @@ FROM docker.io/library/archlinux:base-devel
 
 EXPOSE 80
 
-RUN pacman --noconfirm -Syu && \
+RUN sed -i '/^#\[multilib\]/,/^#Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf && \
+    pacman --noconfirm -Syu && \
     pacman --noconfirm -S git jq pacutils expect vim vifm shellcheck bash-completion man-db man-pages ninja perl-json-xs nginx multilib-devel && \
     pacman --noconfirm -Scc
 
